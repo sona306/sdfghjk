@@ -1,0 +1,49 @@
+@Metadata.layer: #CORE
+@UI: {
+    headerInfo: {
+        typeName: 'Employee details',
+        typeNamePlural: 'All Employee details',
+        title: { type: #STANDARD, label:'Employeedetails', value: 'EmpId' }
+    }
+}
+annotate entity ZC_EMPLOYEE_DETAILS with
+{
+  @UI.facet: [
+          { id: 'GeneralInfo', type: #IDENTIFICATION_REFERENCE, label: 'General Information', position: 10 },
+          { id: 'Leaves', type: #LINEITEM_REFERENCE, label: 'Employee Leaves', position: 20, targetElement: '_leaves' }
+      ]
+
+  @UI: { lineItem: [ { position: 10, label: 'Employee Id' } ],
+       identification: [ { position: 10, label: 'Employee Id' } ] }
+  @Consumption.valueHelpDefinition: [{ entity:{name: 'ZI_EMPLOYEE_VH', element:'EmpId'},
+ additionalBinding: [{ element: 'EmpId' ,localElement: 'EmpId' , usage: #RESULT }]
+ }]
+  @UI.selectionField: [{ position:10 }]
+  EmpId;
+  @UI: { lineItem: [ { position: 20, label: 'Employee Name' } ],
+       identification: [ { position: 20, label: 'Employee Name' } ] }
+  @UI.selectionField: [{element: 'EmpName'}]
+  EmpName;
+  @UI: { lineItem: [ { position: 30, label: 'Employee DEPT' } ],
+       identification: [ { position: 30, label: 'Employee DEPT' } ] }
+  @Consumption.valueHelpDefinition: [{ entity : {name: 'ZR_DEPT_DROPDOWN', element : 'Value' }}] 
+  EmpDept;
+  @UI: { lineItem: [ { position: 40, label: 'Employee DOB' } ],
+       identification: [ { position: 40, label: 'Employee DOB' } ] }
+  EmpDob;
+  @UI: { lineItem: [ { position: 45, label: 'Employee Age' } ],
+      identification: [ { position: 45, label: 'Employee Age' } ] }
+  EmpAge;
+  @UI: { lineItem: [ { position: 50, label: 'Employee Basic' } ],
+       identification: [ { position: 50, label: 'Employee Basic' } ] }
+  EmpBasic;
+  @UI: { lineItem: [ { position: 60, label: 'Created At' } ],
+       identification: [ { position: 60, label: 'Created At' } ] }
+  CreatedAt;
+  @UI: { lineItem: [ { position: 70, label: 'Created By' } ],
+   identification: [ { position: 70, label: 'Created By' } ] }
+   @UI.hidden: true
+  CreatedBy;
+
+
+}

@@ -1,0 +1,73 @@
+managed implementation in class zbp_r_employee_details unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZR_EMPLOYEE_DETAILS //alias <alias_name>
+late numbering
+persistent table zdb_employee
+draft table zdb_d_employee
+
+lock master total etag CreatedAt
+authorization master ( instance )
+etag master CreatedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  draft determine action Prepare;
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+
+  field ( mandatory ) EmpName, EmpDob, EmpBasic, EmpDept;
+  field ( readonly ) EmpId, EmpAge,CreatedBy, CreatedAt;
+  association _leaves { create;}
+  validation validate_basic_dob on save { field EmpBasic, EmpDob; }
+  determination calculateAge on save {field EmpDob;}
+  mapping for zdb_employee
+    {
+      EmpId     = emp_id;
+      EmpName   = emp_name;
+      EmpDob    = emp_dob;
+      EmpAge    = emp_age;
+      EmpBasic  = emp_basic;
+      EmpDept   = emp_dept;
+      CreatedBy = created_by;
+      CreatedAt = created_at;
+    }
+}
+
+define behavior for ZR_LEAVES
+late numbering
+persistent table zdb_leave
+draft table zdb_d_leave
+lock dependent by _employee
+authorization dependent by _employee
+//etag master <field_name>
+{
+  update;
+  delete;
+  field ( mandatory ) LeaveType, StartDate, EndDate;
+  field ( readonly ) EmpId, LeaveId, CreatedBy, CreatedAt, Duration,Approve;
+  determination calculateDu on save {  field StartDate, EndDate; }
+  determination defaultStatus on modify {create; }
+  validation validate_start_end on save {field StartDate, EndDate;}
+  action ( features : instance ) Approve result [1] $self;
+  action (features : instance ) Reject result [1] $self;
+  association _employee{with draft;}
+  mapping for zdb_leave
+    {
+      EmpId     = emp_id;
+      LeaveId   = leave_id;
+      LeaveType = leave_type;
+      StartDate = start_date;
+      Duration  = duration;
+      EndDate   = end_date;
+      Approve   = approve;
+      CreatedBy = created_by;
+      CreatedAt = created_at;
+    }
+
+}

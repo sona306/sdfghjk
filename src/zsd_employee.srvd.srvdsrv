@@ -1,0 +1,6 @@
+@EndUserText.label: 'Service definition for employees leaves'
+define service ZSD_Employee {
+  expose ZC_EMPLOYEE_DETAILS;
+  expose ZC_LEAVES;
+  expose ZI_EMPLOYEE_VH;
+}
